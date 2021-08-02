@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <TableMovie />
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import TableMovie from "./components/TableMovie.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    TableMovie,
   },
 };
 </script>
