@@ -4,22 +4,12 @@
       <thead>
         <tr>
           <th
-            @click="sort('title')"
-            :class="currentSort === 'title' ? currentSortDir : ''"
+            v-for="thead in ['title', 'year', 'director']"
+            :key="thead"
+            @click="sort(thead)"
+            :class="currentSort === thead ? currentSortDir : ''"
           >
-            Title
-          </th>
-          <th
-            @click="sort('year')"
-            :class="currentSort === 'year' ? currentSortDir : ''"
-          >
-            Year
-          </th>
-          <th
-            @click="sort('director')"
-            :class="currentSort === 'director' ? currentSortDir : ''"
-          >
-            Director
+            {{ thead }}
           </th>
         </tr>
       </thead>
@@ -111,26 +101,14 @@ export default {
       this.currentSort = prop;
     },
   },
-  beforeCreate() {
-    console.log("beforeCreate");
-  },
   created() {
-    setTimeout(() => this.fetchList(), 3000);
+    // Simular retardo
+    setTimeout(() => this.fetchList(), 1000);
     console.log("created");
-  },
-  beforeMount() {
-    console.log("beforeMount");
-  },
-  mounted() {
-    console.log("mounted");
-  },
-  beforeUnmount() {
-    console.log("beforeUnmount");
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
