@@ -1,5 +1,7 @@
 <template>
   <section>
+    <label for="search"></label>
+    <input type="text" id="search" v-model="searchTerm" />
     <table v-if="!isLoading" border="">
       <thead>
         <tr>
@@ -46,6 +48,7 @@ export default {
   },
   data() {
     return {
+      searchTerm: "",
       list: [],
       page: 1,
       isLoading: true,
@@ -57,6 +60,29 @@ export default {
   computed: {
     sortedRows() {
       const listCopy = this.list.map((row) => row);
+
+      const filter = listCopy.filter((movie) => {
+        // for (const key in movie) {
+        //   if (
+        //     movie[key]
+        //       .toString()
+        //       .toLowerCase()
+        //       .includes(this.searchTerm.toLowerCase())
+        //   ) {
+        //     return true;
+        //   }
+
+        //   return false;
+        // }
+        const match =
+          movie.title.includes(this.searchTerm.toLowerCase()) ||
+          movie.director
+            ?.toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          movie.year?.toString().includes(this.searchTerm.toLowerCase());
+        return match;
+      });
+
       let start = this.page * 10 - 10;
       let end = start + 10;
 
@@ -68,7 +94,7 @@ export default {
         return 0;
       };
 
-      return listCopy.sort(compare).slice(start, end);
+      return filter.sort(compare).slice(start, end);
     },
     renderPlaceholder() {
       if (this.hasError) {
