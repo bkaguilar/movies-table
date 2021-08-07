@@ -1,7 +1,15 @@
 <template>
   <section>
-    <label for="search"></label>
-    <input type="text" id="search" v-model="searchTerm" />
+    <fieldset class="searchField">
+      <label for="search">Search: </label>
+      <input
+        type="text"
+        id="search"
+        v-model="searchTerm"
+        class="search"
+        placeholder="Name, year or director"
+      />
+    </fieldset>
     <table v-if="!isLoading" border="">
       <thead>
         <tr>
@@ -11,7 +19,7 @@
             @click="sort(thead)"
             :class="currentSort === thead ? currentSortDir : ''"
           >
-            {{ thead }}
+            {{ thead.toUpperCase() }}
           </th>
         </tr>
       </thead>
@@ -19,38 +27,40 @@
         <tr v-for="(row, index) in sortedRows" :key="row.title + index">
           <td>{{ row.title }}</td>
           <td>{{ row.year }}</td>
-          <td>{{ row.director ?? "No se localiza el director" }}</td>
+          <td>{{ row.director ?? "-" }}</td>
         </tr>
       </tbody>
     </table>
     <p v-else>
       {{ renderPlaceholder }}
     </p>
-    <pagination-table
+    <MoviePagination
       v-if="!isLoading"
-      :totalPages="10"
+      :totalPages="list.length / 10"
       :page="page"
-      @prev-click="page--"
-      @next-click="page++"
+      :startPage="startPage"
+      @prev-click="prevPage"
+      @next-click="nextPage"
       @page-click="setPage"
-    ></pagination-table>
+    ></MoviePagination>
   </section>
 </template>
 
 <script>
 import { USER_API } from "../constants";
-import PaginationTable from "./PaginationTable.vue";
+import MoviePagination from "./MoviePagination.vue";
 
 export default {
-  name: "TableMovie",
+  name: "MovieTable",
   components: {
-    PaginationTable,
+    MoviePagination,
   },
   data() {
     return {
       searchTerm: "",
       list: [],
       page: 1,
+      startPage: 0,
       isLoading: true,
       hasError: false,
       currentSort: "title",
@@ -59,9 +69,8 @@ export default {
   },
   computed: {
     sortedRows() {
-      const listCopy = this.list.map((row) => row);
-
-      const filter = listCopy.filter((movie) => {
+      // const listCopy: this.list.map(movie => movie)
+      const filter = this.list.filter((movie) => {
         // for (const key in movie) {
         //   if (
         //     movie[key]
@@ -120,6 +129,20 @@ export default {
     setPage(page) {
       this.page = page;
     },
+    prevPage() {
+      this.page--;
+
+      if (this.page === this.startPage) {
+        this.startPage -= 10;
+      }
+    },
+    nextPage() {
+      this.page++;
+
+      if (this.page === this.startPage + 11) {
+        this.startPage += 10;
+      }
+    },
     sort(prop) {
       if (prop === this.currentSort) {
         this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
@@ -149,6 +172,17 @@ li {
 }
 a {
   color: #42b983;
+}
+.searchField {
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+input.search {
+  padding: 5px;
+  font-size: 1.2em;
+  margin: 10px;
 }
 table {
   table-layout: fixed;

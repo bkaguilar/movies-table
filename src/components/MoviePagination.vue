@@ -8,13 +8,16 @@
       Prev
     </button>
     <button
-      v-for="(p, index) in totalPages"
-      :key="p"
-      @click="$emit('pageClick', p)"
+      v-for="(p, index) in [...Array(totalPages).keys()].slice(
+        startPage,
+        startPage + 10
+      )"
+      :key="p + 1"
+      @click="$emit('pageClick', p + 1)"
       class="pagination-button"
-      :class="{ selected: page === index + 1 }"
+      :class="{ selected: page === index + startPage + 1 }"
     >
-      {{ p }}
+      {{ p + 1 }}
     </button>
     <button
       @click="$emit('nextClick', $event)"
@@ -28,7 +31,7 @@
 
 <script>
 export default {
-  name: "PaginationTable",
+  name: "MoviePagination",
   props: {
     totalPages: {
       type: Number,
@@ -37,6 +40,10 @@ export default {
     page: {
       type: Number,
       default: 1,
+    },
+    startPage: {
+      type: Number,
+      default: 0,
     },
   },
   emits: {

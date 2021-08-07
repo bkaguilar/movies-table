@@ -1,14 +1,14 @@
 <template>
-  <TableMovie />
+  <MovieTable />
 </template>
 
 <script>
-import TableMovie from "./components/TableMovie.vue";
+import MovieTable from "./components/MovieTable.vue";
 
 export default {
   name: "App",
   components: {
-    TableMovie,
+    MovieTable,
   },
 };
 </script>
